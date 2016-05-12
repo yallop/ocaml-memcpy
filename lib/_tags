@@ -1,0 +1,3 @@
+true: package(ctypes)
+<memcpy_stubs.c>: use_ctypes
+<*.{cma,cmxa}>: use_memcpy_stubs

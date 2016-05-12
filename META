@@ -1,0 +1,8 @@
+version = "0.0.1"
+description = "Ctypes-compatible bindings to memcpy"
+requires = "bytes ctypes.stubs"
+archive(byte) = "memcpy.cma"
+archive(bytes, plugin) = "memcpy.cma"
+archive(native) = "memcpy.cmxa"
+archive(native, plugin) = "memcpy.cmxs"
+exists_if = "memcpy.cma"

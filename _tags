@@ -1,0 +1,3 @@
+true: principal, bin_annot, safe_string, strict_sequence, debug
+
+"lib": include
