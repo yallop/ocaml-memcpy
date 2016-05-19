@@ -8,6 +8,7 @@ bug-reports: "http://github.com/yallop/ocaml-memcpy/issues"
 license: "MIT"
 build: [[make]]
 install: [[make "install"]]
+build-test: [[make "test"]]
 remove: [["ocamlfind" "remove" "memcpy"]]
 depends: [
    "ctypes" {>= "0.4.0"}
