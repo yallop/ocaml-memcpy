@@ -35,6 +35,10 @@ install:
 		-nodll _build/lib/lib$(MOD_NAME)_stubs.a \
 		$(ARCHIVES)
 
+test: build
+	$(OCAMLBUILD) lib_test/test.native
+	./test.native
+
 uninstall:
 	ocamlfind remove $(FINDLIB_NAME)
 

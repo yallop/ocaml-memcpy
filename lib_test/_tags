@@ -1,0 +1,1 @@
+<*.*>: package(oUnit), package(ctypes.stubs), use_memcpy_stubs

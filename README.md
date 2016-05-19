@@ -16,3 +16,5 @@ The [`Memcpy`][memcpy-module] provides functions for safely and efficiently copy
 [ctypes-array]: http://ocamllabs.github.io/ocaml-ctypes/Ctypes.html#4_Carraytypes
 [ocaml-ctypes]: https://github.com/ocamllabs/ocaml-ctypes/
 [memcpy-module]: https://github.com/yallop/ocaml-memcpy/blob/master/lib/memcpy.mli
+
+[![Travis build Status](https://travis-ci.org/yallop/ocaml-memcpy.svg?branch=master)](https://travis-ci.org/yallop/ocaml-memcpy)
