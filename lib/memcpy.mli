@@ -40,7 +40,7 @@ val pointer : (unsafe, _ ptr) spec
 val carray : (safe, _ carray) spec
 (** A specification for a Ctypes array type *)
 
-val memcpy : (safe, 's) spec -> (safe, 'd) spec -> src:'s -> dst:'d -> src_off:int -> dst_off:int -> len:int -> unit
+val memcpy : (safe, 's) spec -> (safe, 'd) spec -> src:'s -> dst:'d -> ?src_off:int -> ?dst_off:int -> len:int -> unit
 (** [memcpy s d ~src ~dst ~src_off ~dst_off ~len] copies [len] bytes from
     offset [src_off] of [src] to offset [dst_off] of [dst].
 
@@ -48,7 +48,7 @@ val memcpy : (safe, 's) spec -> (safe, 'd) spec -> src:'s -> dst:'d -> src_off:i
     and [src_off + len] does not fall within [src] or if the memory between
     [dst_off] and [dst_off + len] does not fall within [dst]. *)
 
-val unsafe_memcpy : (_, 's) spec -> (_, 'd) spec -> src:'s -> dst:'d -> src_off:int -> dst_off:int -> len:int -> unit
+val unsafe_memcpy : (_, 's) spec -> (_, 'd) spec -> src:'s -> dst:'d -> ?src_off:int -> ?dst_off:int -> len:int -> unit
 (** [unsafe_memcpy s d ~src ~dst ~src_off ~dst_off ~len] copies [len] bytes from
     offset [src_off] of [src] to offset [dst_off] of [dst].
 

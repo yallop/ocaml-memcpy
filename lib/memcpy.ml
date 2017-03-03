@@ -44,8 +44,8 @@ let convert_pointer : 'a. 'a ptr -> int -> unit ptr =
 
 
 let rec unsafe_memcpy : type s d s' d'. (s', s) spec -> (d', d) spec ->
-  src:s -> dst:d -> src_off:int -> dst_off:int -> len:int -> unit =
-  fun inspec outspec ~src ~dst ~src_off ~dst_off ~len ->
+  src:s -> dst:d -> ?src_off:int -> ?dst_off:int -> len:int -> unit =
+  fun inspec outspec ~src ~dst ?(src_off=0) ?(dst_off=0) ~len ->
     match inspec, outspec with
     | _, Bigarray (cls, _, _) ->
       unsafe_memcpy inspec Pointer ~src ~dst:(bigarray_start cls dst) ~src_off ~dst_off ~len
@@ -77,8 +77,8 @@ let length : type a. (safe, a) spec -> a -> int =
   
 
 let memcpy : type s d. (safe, s) spec -> (safe, d) spec ->
-  src:s -> dst:d -> src_off:int -> dst_off:int -> len:int -> unit =
-  fun inspec outspec ~src ~dst ~src_off ~dst_off ~len ->
+  src:s -> dst:d -> ?src_off:int -> ?dst_off:int -> len:int -> unit =
+  fun inspec outspec ~src ~dst ?(src_off=0) ?(dst_off=0) ~len ->
     if len < 0 || src_off < 0 || src_off > length inspec src - len
                || dst_off < 0 || dst_off > length outspec dst - len 
     then invalid_arg "Memcpy.memcpy"
