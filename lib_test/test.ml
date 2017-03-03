@@ -89,7 +89,7 @@ module Safe_tests
     (In:  BUF with type safe = Memcpy.safe)
     (Out: BUF with type safe = Memcpy.safe) : TESTS =
 struct
-  let check_bounds_failure ?(src_off=0) ?(dst_off=0) ?len ~from ~into () =
+  let check_bounds_failure ?src_off ?dst_off ?len ~from ~into () =
     let dstlen = String.length into
     and srclen = String.length from
     and dst = Out.of_string into
@@ -98,16 +98,16 @@ struct
     assert_raises (Invalid_argument "Memcpy.memcpy")
       (fun () ->
          Memcpy.memcpy (In.t srclen) (Out.t dstlen)
-           ~src ~dst ~src_off ~dst_off ~len)
+           ~src ~dst ?src_off ?dst_off ~len)
 
-  let check_copying ?(src_off=0) ?(dst_off=0) ?len ~from ~into ~produces () =
+  let check_copying ?src_off ?dst_off ?len ~from ~into ~produces () =
     let dstlen = String.length into
     and srclen = String.length from
     and dst = Out.of_string into
     and src = In.of_string from in
     let len = match len with None -> srclen | Some len -> len in
     let () = Memcpy.memcpy (In.t srclen) (Out.t dstlen)
-        ~src ~dst ~src_off ~dst_off ~len
+        ~src ~dst ?src_off ?dst_off ~len
     in
     assert_equal produces (Out.to_string dst)
       ~printer:(fun x -> x)
