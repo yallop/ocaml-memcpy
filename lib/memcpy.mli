@@ -54,3 +54,15 @@ val unsafe_memcpy : (_, 's) spec -> (_, 'd) spec -> src:'s -> dst:'d -> ?src_off
 
     No attempt is made to check that the specified regions of memory actually
     fall within [src] and [dst]. *)
+
+val memcpy_from_string : (safe, 'd) spec -> src:string -> ?dst_off:int -> dst:'d -> unit
+(** [memcpy_from_string d ~src ~dst ~dst_off] copies [src] to offset [dst_off] of [dst].
+
+    @raise [Invalid_argument "Memcpy.memcpy"] if the memory between
+    [dst_off] and [dst_off + len] does not fall within [dst]. *)
+
+val memcpy_from_bytes : (safe, 'd) spec -> src:Bytes.t -> ?dst_off:int -> dst:'d -> unit
+(** [memcpy_from_bytes d ~src ~dst ~dst_off] copies [src] to offset [dst_off] of [dst].
+
+    @raise [Invalid_argument "Memcpy.memcpy"] if the memory between
+    [dst_off] and [dst_off + len] does not fall within [dst]. *)

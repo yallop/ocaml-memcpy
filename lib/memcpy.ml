@@ -83,3 +83,11 @@ let memcpy : type s d. (safe, s) spec -> (safe, d) spec ->
                || dst_off < 0 || dst_off > length outspec dst - len 
     then invalid_arg "Memcpy.memcpy"
     else unsafe_memcpy inspec outspec ~src ~dst ~src_off ~dst_off ~len
+
+let memcpy_from_string d  ~src ?dst_off ~dst =
+  memcpy OCaml_bytes d ~src:(Bytes.unsafe_of_string src) ?src_off:None
+    ~dst ?dst_off ~len:(String.length src)
+
+let memcpy_from_bytes d  ~src ?dst_off ~dst =
+  memcpy OCaml_bytes d ~src ?src_off:None
+    ~dst ?dst_off ~len:(Bytes.length src)

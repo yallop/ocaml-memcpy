@@ -112,8 +112,42 @@ struct
     assert_equal produces (Out.to_string dst)
       ~printer:(fun x -> x)
 
+  let check_copying_bytes ?dst_off ~from ~into ~produces () =
+    let dstlen = String.length into
+    and dst = Out.of_string into
+    and src = Bytes.of_string from in
+    let () = Memcpy.memcpy_from_bytes (Out.t dstlen)
+      ~src ~dst ?dst_off
+    in
+    assert_equal produces (Out.to_string dst)
+      ~printer:(fun x -> x)
+
+  let check_copying_string ?dst_off ~from ~into ~produces () =
+    let dstlen = String.length into
+    and dst = Out.of_string into
+    and src = from in
+    let () = Memcpy.memcpy_from_string (Out.t dstlen)
+      ~src ~dst ?dst_off
+    in
+    assert_equal produces (Out.to_string dst)
+      ~printer:(fun x -> x)
+
   let test_full_overlap _ =
     check_copying
+      ~from:    "abcdefghijkl"
+      ~into:    "0123456789AB"
+      ~produces:"abcdefghijkl"
+      ()
+
+  let test_full_overlap_bytes _ =
+    check_copying_bytes
+      ~from:    "abcdefghijkl"
+      ~into:    "0123456789AB"
+      ~produces:"abcdefghijkl"
+      ()
+
+  let test_full_overlap_string _ =
+    check_copying_string
       ~from:    "abcdefghijkl"
       ~into:    "0123456789AB"
       ~produces:"abcdefghijkl"
@@ -128,6 +162,22 @@ struct
 
   let test_short_src_with_dst_offset _ =
     check_copying
+      ~dst_off:3
+      ~from:    "abc"
+      ~into:    "0123456789AB"
+      ~produces:"012abc6789AB"
+      ()
+
+  let test_short_src_with_dst_offset_bytes _ =
+    check_copying_bytes
+      ~dst_off:3
+      ~from:    "abc"
+      ~into:    "0123456789AB"
+      ~produces:"012abc6789AB"
+      ()
+
+  let test_short_src_with_dst_offset_string _ =
+    check_copying_string
       ~dst_off:3
       ~from:    "abc"
       ~into:    "0123456789AB"
@@ -211,11 +261,23 @@ struct
       "full overlap" >::
       test_full_overlap;
       
+      "full overlap (bytes)" >::
+      test_full_overlap_bytes;
+      
+      "full overlap (string)" >::
+      test_full_overlap_string;
+      
       "short source" >::
       test_short_src;
 
       "short source with dst offset" >::
       test_short_src_with_dst_offset;
+
+      "short source with dst offset (bytes)" >::
+      test_short_src_with_dst_offset_bytes;
+
+      "short source with dst offset (string)" >::
+      test_short_src_with_dst_offset_string;
 
       "short source with src offset and length" >::
       test_with_src_offset_and_len;
