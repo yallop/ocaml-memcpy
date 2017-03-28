@@ -1,4 +1,4 @@
-version = "0.0.1"
+version = "0.2.0"
 description = "Ctypes-compatible bindings to memcpy"
 requires = "bytes ctypes.stubs"
 archive(byte) = "memcpy.cma"
