@@ -7,7 +7,7 @@ There are several ways of storing and accessing blocks of memory in an OCaml pro
 * [Ctypes][ocaml-ctypes] [`ptr`][ctypes-pointer] values that can be used to address arbitrary addresses using typed descriptions of the memory layout.
 * Ctypes [`carray`][ctypes-array] values that provide bounds-checked access to `ptr`-addressed memory.
 
-The [`Memcpy`][memcpy-module] provides functions for safely and efficiently copying blocks of memory between these different representations.
+The [`Memcpy` module][memcpy-module] provides functions for safely and efficiently copying blocks of memory between these different representations.
 
 [string]: http://caml.inria.fr/pub/docs/manual-ocaml/libref/String.html
 [bytes]: http://caml.inria.fr/pub/docs/manual-ocaml/libref/Bytes.html
