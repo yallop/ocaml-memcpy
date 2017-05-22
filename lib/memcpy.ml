@@ -24,7 +24,8 @@ type unsafe = Unsafe
 type (_, _) spec =
     OCaml_bytes : (safe, Bytes.t) spec
   | Bigarray :
-      < ba_repr : 'a; bigarray : 'b; carray : 'c; dims : 'd; element : 'e > bigarray_class *
+      < ba_repr : 'a; bigarray : 'b; carray : 'c; dims : 'd; element : 'e;
+        layout: Bigarray.c_layout > bigarray_class *
       'd *
       ('e, 'a) Bigarray.kind ->
     (safe, 'b) spec
