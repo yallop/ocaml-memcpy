@@ -1,3 +1,6 @@
+0.2.2 (2023-07-24):
+* ctypes 0.21.0 compatibility
+
 0.2.1 (2017-05-23):
 * ctypes 0.12.0 compatibility
 
