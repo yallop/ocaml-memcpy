@@ -112,6 +112,18 @@ struct
     assert_equal produces (Out.to_string dst)
       ~printer:(fun x -> x)
 
+  let check_copying_no_optional_arguments ?len ~from ~into ~produces () =
+    let dstlen = String.length into
+    and srclen = String.length from
+    and dst = Out.of_string into
+    and src = In.of_string from in
+    let len = match len with None -> srclen | Some len -> len in
+    let () = Memcpy.memcpy (In.t srclen) (Out.t dstlen)
+        ~src ~dst ~len
+    in
+    assert_equal produces (Out.to_string dst)
+      ~printer:(fun x -> x)
+
   let check_copying_bytes ?dst_off ~from ~into ~produces () =
     let dstlen = String.length into
     and dst = Out.of_string into
@@ -139,6 +151,13 @@ struct
       ~produces:"abcdefghijkl"
       ()
 
+  let test_full_overlap_no_optional_arguments _ =
+    check_copying_no_optional_arguments
+      ~from:    "abcdefghijkl"
+      ~into:    "0123456789AB"
+      ~produces:"abcdefghijkl"
+      ()
+
   let test_full_overlap_bytes _ =
     check_copying_bytes
       ~from:    "abcdefghijkl"
@@ -155,6 +174,13 @@ struct
 
   let test_short_src _ =
     check_copying
+      ~from:    "abc"
+      ~into:    "0123456789AB"
+      ~produces:"abc3456789AB"
+      ()
+
+  let test_short_src_no_optional_arguments _ =
+    check_copying_no_optional_arguments
       ~from:    "abc"
       ~into:    "0123456789AB"
       ~produces:"abc3456789AB"
@@ -260,6 +286,9 @@ struct
       In.name Out.name >::: [
       "full overlap" >::
       test_full_overlap;
+
+      "full overlap without optional arguments" >::
+      test_full_overlap_no_optional_arguments;
       
       "full overlap (bytes)" >::
       test_full_overlap_bytes;
@@ -269,6 +298,9 @@ struct
       
       "short source" >::
       test_short_src;
+
+      "short source without optional arguments" >::
+      test_short_src_no_optional_arguments;
 
       "short source with dst offset" >::
       test_short_src_with_dst_offset;
