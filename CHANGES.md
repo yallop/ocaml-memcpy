@@ -1,3 +1,6 @@
+0.3.0 (2025-12-29):
+* Reorder arguments to allow application without `src_off` and `dst_off`
+
 0.2.2 (2023-07-24):
 * ctypes 0.21.0 compatibility
 
