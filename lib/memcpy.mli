@@ -41,29 +41,29 @@ val pointer : (unsafe, _ ptr) spec
 val carray : (safe, _ carray) spec
 (** A specification for a Ctypes array type *)
 
-val memcpy : (safe, 's) spec -> (safe, 'd) spec -> src:'s -> dst:'d -> ?src_off:int -> ?dst_off:int -> len:int -> unit
-(** [memcpy s d ~src ~dst ~src_off ~dst_off ~len] copies [len] bytes from
+val memcpy : src:'s -> dst:'d -> ?src_off:int -> ?dst_off:int -> len:int -> (safe, 's) spec -> (safe, 'd) spec -> unit
+(** [memcpy ~src ~dst ~src_off ~dst_off ~len s d] copies [len] bytes from
     offset [src_off] of [src] to offset [dst_off] of [dst].
 
     @raise [Invalid_argument "Memcpy.memcpy"] if the memory between [src_off]
     and [src_off + len] does not fall within [src] or if the memory between
     [dst_off] and [dst_off + len] does not fall within [dst]. *)
 
-val unsafe_memcpy : (_, 's) spec -> (_, 'd) spec -> src:'s -> dst:'d -> ?src_off:int -> ?dst_off:int -> len:int -> unit
-(** [unsafe_memcpy s d ~src ~dst ~src_off ~dst_off ~len] copies [len] bytes from
+val unsafe_memcpy : src:'s -> dst:'d -> ?src_off:int -> ?dst_off:int -> len:int -> (_, 's) spec -> (_, 'd) spec -> unit
+(** [unsafe_memcpy ~src ~dst ~src_off ~dst_off ~len s d] copies [len] bytes from
     offset [src_off] of [src] to offset [dst_off] of [dst].
 
     No attempt is made to check that the specified regions of memory actually
     fall within [src] and [dst]. *)
 
-val memcpy_from_string : (safe, 'd) spec -> src:string -> ?dst_off:int -> dst:'d -> unit
-(** [memcpy_from_string d ~src ~dst ~dst_off] copies [src] to offset [dst_off] of [dst].
+val memcpy_from_string : src:string -> ?dst_off:int -> dst:'d -> (safe, 'd) spec -> unit
+(** [memcpy_from_string ~src ~dst ~dst_off d] copies [src] to offset [dst_off] of [dst].
 
     @raise [Invalid_argument "Memcpy.memcpy"] if the memory between
     [dst_off] and [dst_off + len] does not fall within [dst]. *)
 
-val memcpy_from_bytes : (safe, 'd) spec -> src:Bytes.t -> ?dst_off:int -> dst:'d -> unit
-(** [memcpy_from_bytes d ~src ~dst ~dst_off] copies [src] to offset [dst_off] of [dst].
+val memcpy_from_bytes : src:Bytes.t -> ?dst_off:int -> dst:'d -> (safe, 'd) spec -> unit
+(** [memcpy_from_bytes ~src ~dst ~dst_off d] copies [src] to offset [dst_off] of [dst].
 
     @raise [Invalid_argument "Memcpy.memcpy"] if the memory between
     [dst_off] and [dst_off + len] does not fall within [dst]. *)

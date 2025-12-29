@@ -44,18 +44,18 @@ let convert_pointer : 'a. 'a ptr -> int -> unit ptr =
   fun ptr offset -> to_voidp ptr +@ offset
 
 
-let rec unsafe_memcpy : type s d s' d'. (s', s) spec -> (d', d) spec ->
-  src:s -> dst:d -> ?src_off:int -> ?dst_off:int -> len:int -> unit =
-  fun inspec outspec ~src ~dst ?(src_off=0) ?(dst_off=0) ~len ->
+let rec unsafe_memcpy : type s d s' d'.src:s -> dst:d -> ?src_off:int -> ?dst_off:int ->
+                                           len:int -> (s', s) spec -> (d', d) spec -> unit =
+  fun ~src ~dst ?(src_off=0) ?(dst_off=0) ~len  inspec outspec ->
     match inspec, outspec with
     | _, Bigarray (cls, _, _) ->
-      unsafe_memcpy inspec Pointer ~src ~dst:(bigarray_start cls dst) ~src_off ~dst_off ~len
+      unsafe_memcpy ~src ~dst:(bigarray_start cls dst) ~src_off ~dst_off ~len inspec Pointer
     | Bigarray (cls, _, _), _ ->
-      unsafe_memcpy Pointer outspec ~src:(bigarray_start cls src) ~dst ~src_off ~dst_off ~len
+      unsafe_memcpy ~src:(bigarray_start cls src) ~dst ~src_off ~dst_off ~len Pointer outspec
     | _, CArray ->
-      unsafe_memcpy inspec Pointer ~src ~dst:(CArray.start dst) ~src_off ~dst_off ~len
+      unsafe_memcpy ~src ~dst:(CArray.start dst) ~src_off ~dst_off ~len inspec Pointer
     | CArray, _ ->
-      unsafe_memcpy Pointer outspec ~src:(CArray.start src) ~dst ~src_off ~dst_off ~len
+      unsafe_memcpy ~src:(CArray.start src) ~dst ~src_off ~dst_off ~len Pointer outspec
     | OCaml_bytes, OCaml_bytes ->
       ignore (C.memcpy_bytes_bytes (ocaml_bytes_start dst) (ocaml_bytes_start src)
                 (Unsigned.Size_t.of_int len) dst_off src_off : unit ptr)
@@ -77,18 +77,18 @@ let length : type a. (safe, a) spec -> a -> int =
   | CArray -> CArray.length v * sizeof (CArray.element_type v)
   
 
-let memcpy : type s d. (safe, s) spec -> (safe, d) spec ->
-  src:s -> dst:d -> ?src_off:int -> ?dst_off:int -> len:int -> unit =
-  fun inspec outspec ~src ~dst ?(src_off=0) ?(dst_off=0) ~len ->
+let memcpy : type s d. src:s -> dst:d -> ?src_off:int -> ?dst_off:int -> len:int ->
+                           (safe, s) spec -> (safe, d) spec -> unit =
+  fun ~src ~dst ?(src_off=0) ?(dst_off=0) ~len inspec outspec ->
     if len < 0 || src_off < 0 || src_off > length inspec src - len
                || dst_off < 0 || dst_off > length outspec dst - len 
     then invalid_arg "Memcpy.memcpy"
     else unsafe_memcpy inspec outspec ~src ~dst ~src_off ~dst_off ~len
 
-let memcpy_from_string d  ~src ?dst_off ~dst =
-  memcpy OCaml_bytes d ~src:(Bytes.unsafe_of_string src) ?src_off:None
-    ~dst ?dst_off ~len:(String.length src)
+let memcpy_from_string ~src ?dst_off ~dst d =
+  memcpy ~src:(Bytes.unsafe_of_string src) ?src_off:None
+    ~dst ?dst_off ~len:(String.length src) OCaml_bytes d
 
-let memcpy_from_bytes d  ~src ?dst_off ~dst =
-  memcpy OCaml_bytes d ~src ?src_off:None
-    ~dst ?dst_off ~len:(Bytes.length src)
+let memcpy_from_bytes ~src ?dst_off ~dst d =
+  memcpy ~src ?src_off:None
+    ~dst ?dst_off ~len:(Bytes.length src) OCaml_bytes d
